@@ -52,9 +52,10 @@ namespace Efcore2.Migrations
                     b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(150)")
+                        .HasColumnName("ZipCode");
 
-                    b.Property<string>("street")
+                    b.Property<string>("Street")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
@@ -101,22 +102,22 @@ namespace Efcore2.Migrations
 
             modelBuilder.Entity("Efcore2.models.Organizer", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CompanyName")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("EventOrganizer");
                 });
@@ -137,11 +138,17 @@ namespace Efcore2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("OrganizerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Website")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrganizerId")
+                        .IsUnique();
 
                     b.ToTable("organzierProfiles");
                 });
@@ -154,7 +161,7 @@ namespace Efcore2.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AttendeeId")
+                    b.Property<int>("AttendeeID")
                         .HasColumnType("int");
 
                     b.Property<string>("BadgeNumber")
@@ -169,18 +176,55 @@ namespace Efcore2.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AttendeeID")
+                        .IsUnique();
+
                     b.ToTable("badges");
                 });
 
             modelBuilder.Entity("Efcore2.models.Event", b =>
                 {
                     b.HasOne("Efcore2.models.Organizer", "Organizer")
-                        .WithMany()
+                        .WithMany("Events")
                         .HasForeignKey("OrganizerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Organizer");
+                });
+
+            modelBuilder.Entity("Efcore2.models.OrganzierProfile", b =>
+                {
+                    b.HasOne("Efcore2.models.Organizer", "Organizer")
+                        .WithOne("organzierProfile")
+                        .HasForeignKey("Efcore2.models.OrganzierProfile", "OrganizerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organizer");
+                });
+
+            modelBuilder.Entity("Efcore2.models.badge", b =>
+                {
+                    b.HasOne("Efcore2.models.Attendee", "Attendee")
+                        .WithOne("badge")
+                        .HasForeignKey("Efcore2.models.badge", "AttendeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Attendee");
+                });
+
+            modelBuilder.Entity("Efcore2.models.Attendee", b =>
+                {
+                    b.Navigation("badge");
+                });
+
+            modelBuilder.Entity("Efcore2.models.Organizer", b =>
+                {
+                    b.Navigation("Events");
+
+                    b.Navigation("organzierProfile");
                 });
 #pragma warning restore 612, 618
         }

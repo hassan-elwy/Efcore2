@@ -17,7 +17,10 @@ namespace Efcore2.models
 
         public string Logo { get; set; }
 
-       
+        //navigation
+
+        public int OrganizerId { get; set; }
+        public Organizer Organizer { get; set; } = null!;
         
     }
 }

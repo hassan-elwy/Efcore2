@@ -21,6 +21,22 @@ namespace Efcore2.Context
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<OrganzierProfile>(OP =>
+            {
+                OP.HasKey(x => x.Id);
+
+                OP.HasOne(x => x.Organizer)
+                .WithOne(x => x.organzierProfile)
+                .HasForeignKey<OrganzierProfile>(x => x.OrganizerId);
+            });
+
+
+        }
+
 
          public DbSet<Organizer> organizers { get; set; }
 

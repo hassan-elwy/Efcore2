@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace Efcore2.models
 {
     public class Attendee
     {
+        [Key]
         public int id {  get; set; }
         
         [Required(ErrorMessage = "name is required")]
@@ -21,7 +23,7 @@ namespace Efcore2.models
 
         [Required(ErrorMessage = "Street is required")]
         [MaxLength(150)]
-        public string street { get; set; }
+        public string Street { get; set; }
 
         [Required(ErrorMessage = "City is required")]
         [MaxLength(150)]
@@ -34,9 +36,18 @@ namespace Efcore2.models
 
         [Required(ErrorMessage = "PostalCode is required")]
         [MaxLength(150)]
+        [Column("ZipCode")]
         public string PostalCode { get; set; }
 
+        [NotMapped]
+        public string FullAddress { get { return $"{Country}-{City}-{Street}"; } }
 
+
+        //navigation
+
+        public badge? badge { get; set; }
+
+       
 
     }
 }

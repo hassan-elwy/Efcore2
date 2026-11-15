@@ -20,8 +20,10 @@ namespace Efcore2.models
 
         public int MaxAttendees { get; set; }
 
-        public int OrganizerId { get; set; }
 
-        public Organizer Organizer { get; set; }
+        //Navigation
+       
+        public int OrganizerId { get; set; }
+        public Organizer Organizer { get; set; } = null!;
     }
 }

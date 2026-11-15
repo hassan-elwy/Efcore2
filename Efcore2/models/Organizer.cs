@@ -12,14 +12,20 @@ namespace Efcore2.models
     public class Organizer
     {
         [Required(ErrorMessage ="id must be provided")]
-        public int id {  get; set; }
+        public int Id {  get; set; }
 
         [Required(ErrorMessage = "name must be provided ")]
         [MaxLength(100)]
-        public string name { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
         [MaxLength(150)]
         public string? CompanyName { get; set; }
+
+        //Navigation
+
+        public ICollection<Event>? Events { get; set; }
+        
+        public OrganzierProfile? organzierProfile { get; set; }
 
         
 
